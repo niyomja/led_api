@@ -19,7 +19,11 @@
   "author": "Mr.Niyom Chamaree",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.9.8"
+    "express": "^4.9.8",
+    "body-parser": "^1.19.0",
+    "cheerio": "^1.0.0-rc.3",
+    "cors": "^2.8.5",
+    "request": "^2.88.2"
   },
   "engines": {
     "node": "10.x"
