@@ -20,12 +20,22 @@ server.get('/', (req, res) => {
 server.get('/latest', (req, res) => {
   request(url, (error, response, html) => {
     if (!error && response.statusCode === 200) {
-      const $ = cheerio.load(html)
-      table = $('table.linkevent > tbody . tr').html()
+      const $ = cheerio.load(html, { decodeEntities: false })
+      let data = []
+      let rows = $('table.table.linkevent tr').toArray()
+      let i =0
+      rows.forEach(element => {
+        let cols = $(element.name + ' td').toArray();
+        let asset = [];
+        cols.forEach(col=>{
+          asset.push($(col).text());
+        });
+        data.push(asset)
+      });
       res.send({
         status: 'success',
         response: {
-          'table': table
+          'data': data
         }
       },
         200,
