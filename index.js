@@ -3,7 +3,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const cors = require('cors')
 const server = express()
-const port = process.env.PORT || 5555
+const port = 8080;
 const url = 'https://xn--42cah7d0cxcvbbb9x.com/'
 
 server.use(cors())
