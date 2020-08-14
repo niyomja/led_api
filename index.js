@@ -68,6 +68,8 @@ server.get('/search', (req, res) => {
       const $ = cheerio.load(utf8String)
       let data = []
       let rows = $('table.table.linkevent tr[onclick]').toArray()
+      let found = $('div.linkevent div strong font font').text().replace('ผลการค้นหา \n\t\t\t\t\t\t\t\t\t  พบ', '').replace('\n\t\t\t\t\t\t\t\t\t  รายการ', '').trim()
+      let total_records = parseInt(found)
 
       rows.forEach(element => {
         let onclick = $(element).attr('onclick').replace(/ /g,"")
@@ -95,14 +97,15 @@ server.get('/search', (req, res) => {
 
       res.status(200)
       res.send({
-        'request_url': request_url,
+        total_records: total_records,
+        request_url: request_url,
         status: 'success',
         response: {
           'length': data.length,
           'data': data
         }
       })
-      
+
     } else {
       res.status(404)
       res.send({
