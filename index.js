@@ -5,22 +5,22 @@ const cors = require('cors')
 const iconv  = require('iconv-lite')
 const bodyParser = require('body-parser')
 const url = require('url')
+const { urlencoded } = require('body-parser')
 const server = express()
 const port = process.env.PORT || 5555
 
 server.use(cors())
 
-let app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+let app = express()
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 server.get('/', (req, res) => {
+  res.status(200)
   res.send({
     status: 'success',
     response: 'Welcome to LED Assets API.',
-  },
-    200,
-  )
+  })
 })
 
 server.get('/search', (req, res) => {
@@ -100,7 +100,7 @@ server.get('/search', (req, res) => {
       res.send({
         total_records: total_records,
         page: page,
-        "total_page": total_page,
+        total_page: total_page,
         request_url: request_url,
         status: 'success',
         response: {
@@ -113,6 +113,7 @@ server.get('/search', (req, res) => {
       res.status(404)
       res.send({
         status: 'failure',
+        request_url: request_url,
         response: 'Service is unavailable, Please try again later.',
       })
     }
@@ -120,12 +121,11 @@ server.get('/search', (req, res) => {
 })
 
 server.get('*', (req, res) => {
+  res.status(404)
   res.send({
     status: 'failure',
     response: 'route not found.',
-  },
-    404,
-  )
+  })
 })
 
 server.listen(port, () => console.log('Server running at port %d.', port))
