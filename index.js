@@ -120,6 +120,61 @@ server.get('/search', (req, res) => {
   })
 })
 
+server.get('/detail', (req, res) => {
+  const query = req.query
+  let law_suit_no = query.law_suit_no
+  let law_suit_year = query.law_suit_year
+  let Law_Court_ID = query.Law_Court_ID
+  let deed_no = query.deed_no
+  let addrno = query.addrno
+
+  let request_query = "http://asset.led.go.th/newbid/asset_open.asp?law_suit_no=" + law_suit_no +
+                      '&law_suit_year=' + law_suit_year +
+                      '&Law_Court_ID=' + Law_Court_ID +
+                      '&deed_no=' + deed_no +
+                      '&addrno=' + addrno
+
+
+  var option = {
+    uri: request_query,
+    encoding: null,
+    headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36',
+        'Referrer': "..."
+    }
+  }
+
+  request(option, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      var utf8String = iconv.decode(new Buffer(body), "TIS-620");
+      const $ = cheerio.load(utf8String)
+      let finds = $('div.card-text').toArray()
+      let imgs = $('img').toArray()
+
+      let data = {}
+
+      data.DeedNo = $(finds[5]).text().replace(/\n/g,"").replace(/\t/g,"").replace(/\r/g,"").replace(/ /g,"").replace("ที่ดิน","")
+      data.img =  'http://asset.led.go.th' + $(imgs[3]).attr('src').trim()
+      res.status(200)
+      res.send({
+        request_url: request_query,
+        status: 'success',
+        response: {
+          'data': data
+        }
+      })
+
+    } else {
+      res.status(404)
+      res.send({
+        status: 'failure',
+        request_url: request_query,
+        response: 'Service is unavailable, Please try again later.',
+      })
+    }
+  })
+})
+
 server.get('*', (req, res) => {
   res.status(404)
   res.send({
