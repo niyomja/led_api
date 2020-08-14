@@ -70,6 +70,7 @@ server.get('/search', (req, res) => {
       let rows = $('table.table.linkevent tr[onclick]').toArray()
       let found = $('div.linkevent div strong font font').text().replace('ผลการค้นหา \n\t\t\t\t\t\t\t\t\t  พบ', '').replace('\n\t\t\t\t\t\t\t\t\t  รายการ', '').trim()
       let total_records = parseInt(found)
+      let total_page = Math.ceil(total_records/50) 
 
       rows.forEach(element => {
         let onclick = $(element).attr('onclick').replace(/ /g,"")
@@ -98,6 +99,8 @@ server.get('/search', (req, res) => {
       res.status(200)
       res.send({
         total_records: total_records,
+        page: page,
+        "total_page": total_page,
         request_url: request_url,
         status: 'success',
         response: {
