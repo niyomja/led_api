@@ -26,7 +26,7 @@ server.get('/', (req, res) => {
 server.get('/search', (req, res) => {
   const query = req.query
   
-  let page = query.page ? query.page : 1
+  let page = query.page ? parseInt(query.page) : 1
   let search_asset_type_id = query.search_asset_type_id ? query.search_asset_type_id : ""
   let search_tumbol = query.search_tumbol ? query.search_tumbol : ""
   let search_ampur = query.search_ampur ? query.search_ampur : ""
